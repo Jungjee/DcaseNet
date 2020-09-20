@@ -1,2 +1,4 @@
+# Under Maintenance
+
 # DcaseNet
 Code and pre-trained weights for the paper "DCASENET: A JOINT PRE-TRAINED DEEP NEURAL NETWORK FORDETECTING AND CLASSIFYING ACOUSTIC SCENES AND EVENTS"
