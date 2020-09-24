@@ -12,5 +12,5 @@ docker_image=nvcr.io/nvidia/pytorch:19.10-py3 #when conducting experiments for D
 sudo nvidia-docker run -it --rm --ipc=host --shm-size 20G \
   -v ${local_dir}:/code \
   -v ${DB_dir}:/DB \
-  -v ${save_dir}:/exp torch_140 
+  -v ${save_dir}:/exp ${docker_image}
 
