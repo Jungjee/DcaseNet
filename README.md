@@ -1,6 +1,6 @@
 # Overview
 This github project includes PyTorch implementation for reproducing experiments and DNN models used in the paper
-[DcaseNet: A Joint Pre-trained Neep Neural Network for Detecting and Classifying Acoustic Scenes and Events]( https://arxiv.org/abs/2009.09642 ).
+[DcaseNet: An integrated pretrained deep neural network for detecting and classifying acoustic scenes and events]( https://arxiv.org/abs/2009.09642 ), submitted to IEEE ICASSP 2021.
 
 DcaseNet is a DNN which jointly performs acoustic scene classification (ASC), audio tagging (TAG), and sound event detection (SED) simultaneously.
 It adopts a two-phase training. In the first phase, joint training of three tasks are performed. Then, the model is fine-tuned for each task. 
