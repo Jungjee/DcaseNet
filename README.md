@@ -24,7 +24,7 @@ set phase to 1 before executing the script.
 ##  Evaluation
 
 1. Download three datasets: DCASE 2020 challenge Task 1-a, DCASE 2019 challenge Task 2, and DCASE 2020 challenge Task 3 and configure directories.
-2. Run [evaluate.sh](https://github.com/Jungjee/DcaseNet/blob/master/evaluate.sh)
+2. Run [evaluate_trained_models.sh](https://github.com/Jungjee/DcaseNet/blob/master/evaluate_trained_models.sh)
 
 ##### Email jeewon.leo.jung@gmail.com for other details :-).
 
