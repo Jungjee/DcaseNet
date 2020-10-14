@@ -33,7 +33,7 @@ set phase to 1 before executing the script.
 This reposity provides the code for reproducing below paper. 
 ```
 @article{jung2020dcasenet,
-  title={DCASENET: A joint pre-trained deep neural network for detecting and classifying acoustic scenes and events},
+  title={DCASENET: An integrated pre-trained deep neural network for detecting and classifying acoustic scenes and events},
   author={Jung, Jee-weon and Kim, Hye-jin and Kim, Ju-ho and Yu, Ha-Jin},
   journal={arXiv preprint arXiv:2009.09642},
   year={2020}
