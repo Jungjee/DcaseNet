@@ -6,7 +6,7 @@ DcaseNet is a DNN which jointly performs acoustic scene classification (ASC), au
 It adopts a two-phase training. In the first phase, joint training of three tasks are performed. Then, the model is fine-tuned for each task. 
 
 
-# Usage (not validated yet)
+# Usage (file directories under validation)
 
 ## Environment Setting
 We used Nvidia GPU Cloud for conducting our experiments. Training was done using one Nvidia Titan Rtx GPU. Our settings are avalable at [launch_nvidia-gpu-cloud.sh]( https://github.com/Jungjee/DcaseNet/blob/master/launch_nvidia-gpu-cloud.sh )
