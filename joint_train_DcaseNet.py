@@ -1,3 +1,5 @@
+# To leo
+
 from tqdm import tqdm
 from torch.optim.lr_scheduler import CosineAnnealingWarmRestarts
 from sklearn.model_selection import KFold
@@ -40,15 +42,26 @@ def main():
         torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.benchmark = False
 
+
+
     #pre-process DB for first time
+    ##############
+    ## modified ##
+    ##############
+    # Change: use flag -> check existence
+    #         refactor condition
+    # TODO: please select one and remove this
+    ##############################################################################
+    """
+    # prev
     if args.preprocess_sed and 'SED' in args.task:
         from preprocess import extract_log_mel_spec_sed
         print(extract_log_mel_spec_sed(lines, args))
-
+        
     #get DB list: SED
     if 'SED' in args.task:
-        lines_SED = get_utt_list(args.DB_SED+'log_mel_spec_label/', ext = 'h5')
-        trn_lines_SED, evl_lines_SED =split_dcase2020_sed(lines_SED)
+        lines_SED = get_utt_list(args.DB_SED+'log_mel_spec_label/', ext='h5')
+        trn_lines_SED, evl_lines_SED = split_dcase2020_sed(lines_SED)
         if args.verbose > 0:
             print('SED DB statistics')
             print('# tot samp: {}\n'\
@@ -58,11 +71,46 @@ def main():
             print(sed_label2idx)
             print(sed_idx2label)
         del lines_SED
+    """
+    # current
+    
+    #get DB list: SED
+    if 'SED' in args.task:
+        if not os.path.exists(args.DB_SED+'log_mel_spec_label/'):
+            lines_SED = get_utt_list(args.DB_SED+args.wav_SED)
+            from preprocess import extract_log_mel_spec_sed
+            print(extract_log_mel_spec_sed(lines_SED, args))
+
+        lines_SED = get_utt_list(args.DB_SED+'log_mel_spec_label/', ext='h5')
+        trn_lines_SED, evl_lines_SED = split_dcase2020_sed(lines_SED)
+        if args.verbose > 0:
+            print('SED DB statistics')
+            print('# tot samp: {}\n'\
+              '# trn samp: {}\n'\
+              '# evl samp: {}\n'.format(len(lines_SED), len(trn_lines_SED), len(evl_lines_SED)))
+            print(sed_labels)
+            print(sed_label2idx)
+            print(sed_idx2label)
+        del lines_SED
+    ##############################################################################
+
+
 
     #get DB list: ASC
     if 'ASC' in args.task:
         lines_ASC = get_utt_list(args.DB_ASC+args.wav_ASC)
 
+
+
+        
+        ##############
+        ## modified ##
+        ##############
+        # Change: use flag -> check existence
+        # TODO: please select one and remove this
+        ######################################################################
+        """
+        # prev
         if args.make_d_label_ASC:
             with open(args.DB_ASC+args.meta_scp) as f:
                 l_meta_ASC = f.readlines()
@@ -70,6 +118,18 @@ def main():
             pk.dump([d_label_ASC, l_label_ASC], open(args.DB_ASC+args.d_label_ASC, 'wb'))
         else:
             d_label_ASC, l_label_ASC = pk.load(open(args.DB_ASC+args.d_label_ASC, 'rb'))
+        """
+        # current
+        if os.path.exists(args.DB_ASC+args.meta_scp):
+            d_label_ASC, l_label_ASC = pk.load(open(args.DB_ASC+args.d_label_ASC, 'rb'))
+        else:
+            with open(args.DB_ASC+args.meta_scp) as f:
+                l_meta_ASC = f.readlines()
+            d_label_ASC, l_label_ASC = make_d_label(l_meta_ASC[1:])
+            pk.dump([d_label_ASC, l_label_ASC], open(args.DB_ASC+args.d_label_ASC, 'wb'))
+        ######################################################################
+
+
 
         trn_lines_ASC = split_dcase2020_fold_strict(fold_scp = args.DB_ASC+args.fold_trn, lines = lines_ASC)
         evl_lines_ASC = split_dcase2020_fold_strict(fold_scp = args.DB_ASC+args.fold_evl, lines = lines_ASC)

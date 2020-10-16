@@ -10,10 +10,17 @@ from tqdm import tqdm
 from utils import *
 
 
+###########
+## fixed ##
+###########
+# Change: variable names
+#           - args.DB_dir -> args.DB_sed
+#           - args.wav_dir -> args.wav_SED
+##############################################################################
 def extract_log_mel_spec_sed(lines, args):
-    base_dir = args.DB_dir+args.wav_dir
-    meta_dir = args.DB_dir+'metadata_dev/'
-    h5_dir = args.DB_dir+'log_mel_spec_label/'
+    base_dir = args.DB_SED+args.wav_SED
+    meta_dir = args.DB_SED+'metadata_dev/'
+    h5_dir = args.DB_SED+'log_mel_spec_label/'
     if not os.path.exists(h5_dir): os.makedirs(h5_dir)
     log_mel_spec_extractor = ta.transforms.MelSpectrogram(
         24000,
@@ -51,6 +58,8 @@ def extract_log_mel_spec_sed(lines, args):
                 hf.create_dataset('log_mel_spec', data = X_mono, dtype = np.float32)
                 hf.create_dataset('label_sed', data = y, dtype = np.float32)
     return True
+##############################################################################
+
     
 def _load_output_format_file(_output_format_file):
     """

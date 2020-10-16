@@ -13,20 +13,20 @@ def get_args():
     parser.add_argument('-dir_model_weight', type = str, default = '')
 
     #ASC
-    parser.add_argument('-meta_scp', type = str, default = 'meta.csv')
-    parser.add_argument('-fold_trn', type = str, default = 'evaluation_setup/fold1_train.csv')
-    parser.add_argument('-fold_evl', type = str, default = 'evaluation_setup/fold1_evaluate.csv')
-    parser.add_argument('-d_label_ASC', type = str, default = 'd_label.pk')
-    parser.add_argument('-wav_ASC', type = str, default = 'audio/')
+    parser.add_argument('-meta_scp', type = str, default = 'TAU-urban-acoustic-scenes-2020-mobile-development/meta.csv')
+    parser.add_argument('-fold_trn', type = str, default = 'TAU-urban-acoustic-scenes-2020-mobile-development/evaluation_setup/fold1_train.csv')
+    parser.add_argument('-fold_evl', type = str, default = 'TAU-urban-acoustic-scenes-2020-mobile-development/evaluation_setup/fold1_evaluate.csv')
+    parser.add_argument('-d_label_ASC', type = str, default = 'TAU-urban-acoustic-scenes-2020-mobile-development/d_label.pk')
+    parser.add_argument('-wav_ASC', type = str, default = 'TAU-urban-acoustic-scenes-2020-mobile-development/audio/')
 
     # sed
     parser.add_argument('-wav_SED', type = str, default = 'mic_dev/')
     parser.add_argument('-h5_dir_SED', type = str, default = 'log_mel_spec_label/')
 
     #hyper-params
-    parser.add_argument('-bs_ASC', type = int, default = 24)
-    parser.add_argument('-bs_SED', type = int, default = 32)
-    parser.add_argument('-bs_TAG', type = int, default = 64)
+    parser.add_argument('-bs_ASC', type = int, default = 1)
+    parser.add_argument('-bs_SED', type = int, default = 1)
+    parser.add_argument('-bs_TAG', type = int, default = 1)
     parser.add_argument('-lr', type = float, default = 0.001)
     parser.add_argument('-lr_decay', type = str, default = 'cosine')
     parser.add_argument('-lrdec_t0', type = int, default = 80)
@@ -62,11 +62,11 @@ def get_args():
     #flag
     parser.add_argument('-amsgrad', type = str2bool, nargs='?', const=True, default = True)
     parser.add_argument('-nesterov', type = str2bool, nargs='?', const=True, default = True)
-    parser.add_argument('-make_d_label_ASC', type = str2bool, nargs='?', const=True, default = False)
+    #parser.add_argument('-make_d_label_ASC', type = str2bool, nargs='?', const=True, default = False)
     parser.add_argument('-save_best_only', type = str2bool, nargs='?', const=True, default = True)
     parser.add_argument('-reproducible', type = str2bool, nargs='?', const=True, default = False)
     parser.add_argument('-do_lr_decay', type = str2bool, nargs='?', const=True, default = True)
-    parser.add_argument('-preprocess_sed', type = str2bool, nargs='?', const=True, default = False)
+    #parser.add_argument('-preprocess_sed', type = str2bool, nargs='?', const=True, default = False)
     parser.add_argument('-do_mixup', type = str2bool, nargs='?', const=True, default = False)
 
     args = parser.parse_args()
