@@ -3,9 +3,13 @@ import torch
 eps = 1e-8
 
 class metric_manager(object):
-    def __init__(self, task, save_dir, model, save_best_only = True):
+    def __init__(self, task, save_dir, model, save_best_only=True):
+        if(
+            'ASC' not in task and 
+            'SED' not in task and 
+            'TAG' not in task
+        ):  raise ValueError('task unrecognized, got:{}'.format(task))        
         self.task = task
-        if 'ASC' not in task and 'SED' not in task and 'TAG' not in task: raise ValueError('task unrecognized, got:{}'.format(task))
         self.save_dir = save_dir
         self.model = model
         self.save_best_only = save_best_only
@@ -86,6 +90,7 @@ def calculate_per_class_lwlrap(truth, scores):
     """
     assert truth.shape == scores.shape
     num_samples, num_classes = scores.shape
+
     # Space to store a distinct precision value for each class on each sample.
     # Only the classes that are true for each sample will be filled in.
     precisions_for_samples_by_classes = np.zeros((num_samples, num_classes))
@@ -97,6 +102,7 @@ def calculate_per_class_lwlrap(truth, scores):
             precision_at_hits)
     labels_per_class = np.sum(truth > 0, axis=0)
     weight_per_class = labels_per_class / float(np.sum(labels_per_class))
+    
     # Form average of each column, i.e. all the precisions assigned to labels in
     # a particular class.
     per_class_lwlrap = (np.sum(precisions_for_samples_by_classes, axis=0) /
@@ -114,7 +120,6 @@ def calculate_per_class_lwlrap(truth, scores):
 def reshape_3Dto2D(A):
     return A.reshape(A.shape[0] * A.shape[1], A.shape[2])
 
-
 def f1_overall_framewise(O, T):
     if len(O.shape) == 3:
         O, T = reshape_3Dto2D(O), reshape_3Dto2D(T)
@@ -125,7 +130,6 @@ def f1_overall_framewise(O, T):
     recall = float(TP) / float(Nref + eps)
     f1_score = 2 * prec * recall / (prec + recall + eps)
     return f1_score
-
 
 def er_overall_framewise(O, T):
     if len(O.shape) == 3:
@@ -142,7 +146,6 @@ def er_overall_framewise(O, T):
     ER = (S+D+I) / (Nref + 0.0)
     return ER
 
-
 def f1_overall_1sec(O, T, block_size):
     if len(O.shape) == 3:
         O, T = reshape_3Dto2D(O), reshape_3Dto2D(T)
@@ -154,7 +157,6 @@ def f1_overall_1sec(O, T, block_size):
         T_block[i, :] = np.max(T[int(i * block_size):int(i * block_size + block_size - 1), :], axis=0)
     return f1_overall_framewise(O_block, T_block)
 
-
 def er_overall_1sec(O, T, block_size):
     if len(O.shape) == 3:
         O, T = reshape_3Dto2D(O), reshape_3Dto2D(T)
@@ -165,7 +167,6 @@ def er_overall_1sec(O, T, block_size):
         O_block[i, :] = np.max(O[int(i * block_size):int(i * block_size + block_size - 1), :], axis=0)
         T_block[i, :] = np.max(T[int(i * block_size):int(i * block_size + block_size - 1), :], axis=0)
     return er_overall_framewise(O_block, T_block)
-
 
 def compute_sed_scores(pred, gt, nb_frames_1s):
     """
@@ -181,12 +182,11 @@ def compute_sed_scores(pred, gt, nb_frames_1s):
     scores = [ero, f1o]
     return scores
 
+
 #####
 # Functions for format conversions
 #####
-
 def output_format_dict_to_classification_labels(_output_dict, _feat_cls):
-
     _unique_classes = _feat_cls.get_classes()
     _nb_classes = len(_unique_classes)
     _azi_list, _ele_list = _feat_cls.get_azi_ele_list()
@@ -204,7 +204,6 @@ def output_format_dict_to_classification_labels(_output_dict, _feat_cls):
                 _labels[_frame_cnt, _tmp_doa[0], int(_feat_cls.get_list_index(_tmp_doa[1], _tmp_doa[2]))] = 1
 
     return _labels
-
 
 def classification_label_format_to_output_format(_feat_cls, _labels):
     """
@@ -227,7 +226,6 @@ def classification_label_format_to_output_format(_feat_cls, _labels):
                         [_tmp_class, _azi, _ele])
 
     return _output_dict
-
 
 def description_file_to_output_format(_desc_file_dict, _unique_classes, _hop_length_sec):
     """
@@ -257,7 +255,6 @@ def description_file_to_output_format(_desc_file_dict, _unique_classes, _hop_len
 
     return _output_dict
 
-
 def load_output_format_file(_output_format_file):
     """
     Loads DCASE output format csv file and returns it in dictionary format
@@ -277,7 +274,6 @@ def load_output_format_file(_output_format_file):
     _fid.close()
     return _output_dict
 
-
 def write_output_format_file(_output_format_file, _output_format_dict):
     """
     Writes DCASE output format csv file, given output format dictionary
@@ -287,7 +283,6 @@ def write_output_format_file(_output_format_file, _output_format_dict):
     :return:
     """
     _fid = open(_output_format_file, 'w')
-    # _fid.write('{},{},{},{}\n'.format('frame number with 20ms hop (int)', 'class index (int)', 'azimuth angle (int)', 'elevation angle (int)'))
     for _frame_ind in _output_format_dict.keys():
         for _value in _output_format_dict[_frame_ind]:
             _fid.write('{},{},{},{}\n'.format(int(_frame_ind), int(_value[0]), int(_value[1]), int(_value[2])))
