@@ -2,10 +2,9 @@ import os
 import torch
 import numpy as np
 
-
-def get_utt_list(src_dir, ext = 'wav'):
+def get_utt_list(src_dir, ext='wav'):
     l_utt = []
-    for r, ds, fs in os.walk(src_dir):
+    for _, _, fs in os.walk(src_dir):
         for f in fs:
             if os.path.splitext(f)[1] != '.'+ext:
                 continue
@@ -45,25 +44,6 @@ def make_d_label(lines):
             idx += 1
     return dic_label, list_label
 
-def split_dcase2020_fold(fold_scp, lines):
-    '''
-    Input validate lines
-    '''
-    fold_lines = open(fold_scp, 'r').readlines()
-    dev_lines = []
-    val_lines = []
-
-    fold_list = []
-    for line in fold_lines[1:]:
-        fold_list.append(line.strip().split('\t')[0].split('/')[1])
-    for line in lines:
-        if line in fold_list:
-            val_lines.append(line)
-        else:
-            dev_lines.append(line)
-
-    return dev_lines, val_lines
-
 def split_dcase2020_fold_strict(fold_scp, lines):
     fold_lines = open(fold_scp, 'r').readlines()
     l_return = []
@@ -93,13 +73,6 @@ def split_dcase2020_sed(lines):
             continue
     return trn_lines, evl_lines
 
-
-sed_labels = ['alarm', 'baby', 'crash', 'dog', 'engine', 'female_screem', \
-              'female_speech', 'fire', 'footsteps', 'knock', 'male_screem', \
-              'male_speech', 'phone', 'piano']
-sed_label2idx = {lb: i for i, lb in enumerate(sed_labels)}
-sed_idx2label = {i: lb for i, lb in enumerate(sed_labels)}
-
 def cycle(iterable):
     """
     convert dataloader to iterator
@@ -113,3 +86,9 @@ def cycle(iterable):
 def uptohere():
     print('='*5+ '\nsuccess\n'+'='*5)
     exit()
+
+sed_labels = ['alarm', 'baby', 'crash', 'dog', 'engine', 'female_screem', \
+              'female_speech', 'fire', 'footsteps', 'knock', 'male_screem', \
+              'male_speech', 'phone', 'piano']
+sed_label2idx = {lb: i for i, lb in enumerate(sed_labels)}
+sed_idx2label = {i: lb for i, lb in enumerate(sed_labels)}
