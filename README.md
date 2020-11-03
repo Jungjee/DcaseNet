@@ -27,7 +27,7 @@ set phase to 1 before executing the script.
 2. Run [evaluate_trained_models.sh](https://github.com/Jungjee/DcaseNet/blob/master/evaluate_trained_models.sh)
 
 ## Windows
-There's a simple GUI program in ![DCASENetShellScriptBuilder]([/DCASENetShellScriptBuilder/DCASENetShellScriptBuilder.exe]) that generates a script that one can run on Windows OS.
+There's a simple GUI program in [DCASENetShellScriptBuilder](https://github.com/Jungjee/DcaseNet/tree/develop/DCASENetShellScriptBuilder) that generates a script that one can run on Windows OS.
 After configuring a few checkboxes and setting directories for datasets, the generated script trains and evaluates.
 This program is provided by yeongsoo, and no further maintenance will be done. 
 
@@ -43,7 +43,7 @@ The program has three rows:
 Below, there are text boxes where one can set directories of the downloaded datasets and save trained models. 
 Note that when setting dataset directories, the code in this repo expects the folder that comes out after unzipping it. 
 
-![IMAGE NAME]([IMAGE_DIR])
+![DCASENetShellScriptBuilder](https://github.com/Jungjee/DcaseNet/blob/develop/DCASENetShellScriptBuilder/image.PNG?raw=true)
 
 ##### Email jeewon.leo.jung@gmail.com for other details :-).
 
