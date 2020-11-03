@@ -19,10 +19,8 @@ def train_joint_3task(model, trnset_gen_ASC, trnset_gen_SED, trnset_gen_TAG, epo
     #train phase
     model.train()
     idx_ct_start = int(args.nb_iter_per_epoch*epoch)
-    if args.do_mixup:
-        mixup = True if epoch > args.mixup_start else False
-    else:
-        mixup = False
+    mixup = args.do_mixup and epoch > args.mixup_start  
+
     loss = 0.
     loss_SED = 0.
     loss_ASC = 0.
@@ -30,6 +28,7 @@ def train_joint_3task(model, trnset_gen_ASC, trnset_gen_SED, trnset_gen_TAG, epo
     with tqdm(total = args.nb_iter_per_epoch, ncols = 100) as pbar:
         for idx in range(args.nb_iter_per_epoch):
             _loss = 0.
+
             #####
             # ASC feed forward
             #####
@@ -39,9 +38,7 @@ def train_joint_3task(model, trnset_gen_ASC, trnset_gen_SED, trnset_gen_TAG, epo
 
                 #mixup data if condition is met
                 if mixup:
-                    m_batch, m_label_a, m_label_b, lam = mixup_data(m_batch, m_label,
-                        alpha = args.mixup_alpha,
-                        use_cuda = True)
+                    m_batch, m_label_a, m_label_b, lam = mixup_data(m_batch, m_label, alpha=args.mixup_alpha)
                     m_batch, m_label_a, m_label_b = map(torch.autograd.Variable, [m_batch, m_label_a, m_label_b])
                     out_ASC = model(m_batch, mode = ['ASC'])['ASC']
                     _loss_ASC = mixup_criterion(criterion['cce_ASC'], out_ASC, m_label_a, m_label_b, lam)
@@ -58,18 +55,10 @@ def train_joint_3task(model, trnset_gen_ASC, trnset_gen_SED, trnset_gen_TAG, epo
             if 'SED' in args.task:
                 m_batch, m_label = next(trnset_gen_SED)
                 m_batch, m_label = m_batch.to(device), m_label.to(device, dtype=torch.float)
-                #out_SED = model(m_batch, mode = ['SED'])['SED']
-                '''
-                if args.verbose>=2: 
-                    print(out_SED.size())
-                    print(m_label.size())
-                '''
-                #_loss_SED = criterion['bce_SED'](out_SED, m_label)
+
                 #mixup data if condition is met
                 if mixup:
-                    m_batch, m_label_a, m_label_b, lam = mixup_data(m_batch, m_label,
-                        alpha = args.mixup_alpha,
-                        use_cuda = True)
+                    m_batch, m_label_a, m_label_b, lam = mixup_data(m_batch, m_label, alpha=args.mixup_alpha)
                     m_batch, m_label_a, m_label_b = map(torch.autograd.Variable, [m_batch, m_label_a, m_label_b])
                     out_SED = model(m_batch, mode = ['SED'])['SED']
                     _loss_SED = mixup_criterion(criterion['bce_SED'], out_SED, m_label_a, m_label_b, lam)
@@ -87,16 +76,10 @@ def train_joint_3task(model, trnset_gen_ASC, trnset_gen_SED, trnset_gen_TAG, epo
                 m_batch, m_label = next(trnset_gen_TAG)
                 m_batch, m_label = m_batch.to(device), m_label.to(device, dtype=torch.float)
                 out_TAG = model(m_batch, mode = ['TAG'])['TAG']
-                '''
-                if args.verbose>=2: 
-                    print(out_TAG)
-                    print(m_label)
-                '''
+
                 #_loss_TAG = criterion['bce_TAG'](out_TAG, m_label)
                 if mixup:
-                    m_batch, m_label_a, m_label_b, lam = mixup_data(m_batch, m_label,
-                        alpha = args.mixup_alpha,
-                        use_cuda = True)
+                    m_batch, m_label_a, m_label_b, lam = mixup_data(m_batch, m_label, alpha=args.mixup_alpha)
                     m_batch, m_label_a, m_label_b = map(torch.autograd.Variable, [m_batch, m_label_a, m_label_b])
                     out_TAG = model(m_batch, mode = ['TAG'])['TAG']
                     _loss_TAG = mixup_criterion(criterion['bce_TAG'], out_TAG, m_label_a, m_label_b, lam)
@@ -108,11 +91,10 @@ def train_joint_3task(model, trnset_gen_ASC, trnset_gen_SED, trnset_gen_TAG, epo
                 loss_TAG += _loss_TAG.detach().cpu().numpy()
 
             loss += _loss.detach().cpu().numpy()
-            #print(loss, loss_ASC)
+
             #####
             # Joint back-prop
             #####
-            #loss = args.loss_weight_SED * _loss_SED + args.loss_weight_ASC * _loss_ASC + args.loss_weight_TAG * _loss_TAG
             optimizer.zero_grad()
             _loss.backward()
             optimizer.step()
@@ -136,13 +118,23 @@ def train_joint_3task(model, trnset_gen_ASC, trnset_gen_SED, trnset_gen_TAG, epo
                     loss = 0.
 
                 pbar.set_description(description)
+
                 if idx != 0:
                     pbar.update(args.nb_iter_per_log)
                 else:
                     pbar.update(1)
+
+                ############
+                ## delete ##
+                ############
+                # XXX: where variable 'lr' using?
+                ########################################################
+                """
                 for p_group in optimizer.param_groups:
                     lr = p_group['lr']
                     break
+                """
+                ########################################################
 
             if args.do_lr_decay:
                 if args.lr_decay == 'cosine':
@@ -166,12 +158,9 @@ def evaluate_SED(model, evlset_gen, device, args):
             y_true.append(m_label.numpy())
             y_keys.append(m_keys)
             y_pred.append(out.detach().cpu().numpy())
-
-
     y_true = np.concatenate(y_true, axis=0)
     y_pred = np.concatenate(y_pred, axis=0)
     y_keys = np.concatenate(y_keys, axis=0)
-
     if args.verbose >=2: 
         print('y_true:',y_true.shape)
         print('y_pred:',y_pred.shape)
@@ -197,7 +186,6 @@ def evaluate_SED(model, evlset_gen, device, args):
     if args.verbose >=2: 
         print('y_true:',y_true.shape)
         print('y_pred:',y_pred.shape)
-
 
     er, f1 = compute_sed_scores(
         pred = (y_pred>args.sed_threshold).astype(np.float32),
@@ -248,17 +236,12 @@ def evaluate_TAG(model, evlset_gen, device, args):
     y_true = np.zeros([0, 80], np.float32)
     with torch.set_grad_enabled(False):
         for m_batch, m_label in evlset_gen:
-            #print(m_batch.size())
-            #exit()
-            #m_batch = m_batch.view(-1, 1, args.nb_mels, args.nb_frames_ASC+1).to(device)
             m_batch = m_batch.to(device)
             out = torch.sigmoid(model(m_batch, mode = ['TAG'])['TAG'])
             m_label = list(m_label.numpy())
 
             y_pred = np.concatenate([y_pred, out.detach().cpu().numpy()])
             y_true = np.concatenate([y_true, m_label])
-            #print(y_pred.shape)
-            #print(y_true.shape)
 
     per_class_lwlrap, weight_per_class = calculate_per_class_lwlrap(y_true, y_pred)
     lwlrap = np.sum(per_class_lwlrap * weight_per_class)
