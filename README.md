@@ -15,16 +15,16 @@ We used Nvidia GPU Cloud for conducting our experiments. The training was done u
 
 1. Download three datasets: DCASE 2020 challenge Task 1-a, DCASE 2019 challenge Task 2, and DCASE 2020 challenge Task 3 and configure directories.
 2. (selectively) Enter virtual environment using NGC. 
-3. run [train.sh](https://github.com/Jungjee/DcaseNet/blob/master/train.sh)
+3. Set parameters in [train.sh](https://github.com/Jungjee/DcaseNet/blob/master/train.sh)
+4. run train.sh
 
-If you prefer to use pre-trained joint DcaseNet and fine-tune only,
-set phase to 1 before executing the script. 
-
+If you prefer to use pre-trained joint DcaseNet and fine-tune only, remove 'Joint' experiment and copy [weights](https://github.com/Jungjee/DcaseNet/tree/master/weights) into your 'dir_model_weight'
 
 ##  Evaluation
 
 1. Download three datasets: DCASE 2020 challenge Task 1-a, DCASE 2019 challenge Task 2, and DCASE 2020 challenge Task 3 and configure directories.
-2. Run [evaluate_trained_models.sh](https://github.com/Jungjee/DcaseNet/blob/master/evaluate_trained_models.sh)
+2. Set parameters in [evaluate_trained_models.sh](https://github.com/Jungjee/DcaseNet/blob/master/evaluate_trained_models.sh)
+3. Run evaluate_trained_models.sh
 
 ## Windows
 There's a simple GUI program in [DCASENetShellScriptBuilder](https://github.com/Jungjee/DcaseNet/tree/develop/DCASENetShellScriptBuilder) that generates a script that one can run on Windows OS.
