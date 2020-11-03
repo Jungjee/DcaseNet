@@ -9,7 +9,6 @@ def get_args():
     ##########
     ## PATH ##
     ##########
-    parser.add_argument('-phase', type = str, required = True)
     parser.add_argument('-name', type = str, required = True)
     parser.add_argument('-save_dir', type = str, required = True)
     parser.add_argument('-dir_model_weight', type = str, default = '')

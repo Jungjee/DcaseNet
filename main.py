@@ -164,11 +164,11 @@ def main():
     with open(save_dir+'modelsumm.txt', 'w') as f: f.write(str(model_summ))
 
     #load weights
-    if args.phase == 'fine_tune' or args.phase == 'eval':
+    if 'fine-tune' in args.name or 'Eval' in args.name:
         model.load_state_dict(torch.load(args.dir_model_weight))
     model = model.to(device)
     
-    if args.phase == 'eval':
+    if 'Eval' in args.name:
         if 'ASC' in args.task:
             acc, conf_mat = evaluate_ASC(model = model,
                 evlset_gen = evlset_gen_ASC,

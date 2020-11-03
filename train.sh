@@ -12,7 +12,7 @@ fi
 if [ ${phase} -le 0 ]; then
   ######
   # Joint train ASC, TAG, and SED tasks using DcaseNet-v3 architecture
-  CUDA_VISIBLE_DEVICES=${gpu_id} python joint_train_DcaseNet.py -verbose 0 \
+  CUDA_VISIBLE_DEVICES=${gpu_id} python main.py -verbose 0 \
     -nb_iter_per_epoch 500 \
     -task ASC SED TAG \
     -name ${joint_model_name} -model_scp DcaseNet -model_name get_DcaseNet_v3 \
@@ -28,8 +28,8 @@ fi
 if [ ${phase} -le 1 ]; then
   #####
   # fine-tune for ASC
-  exp_name="finetune_ASC"
-  CUDA_VISIBLE_DEVICES=${gpu_id} python fine_tune_single_task.py -verbose 0 \
+  exp_name="fine-tune_ASC"
+  CUDA_VISIBLE_DEVICES=${gpu_id} python main.py -verbose 0 \
     -nb_iter_per_epoch 500 \
     -task ASC \
     -name ${exp_name} -model_scp DcaseNet -model_name get_DcaseNet_v3 \
@@ -46,8 +46,8 @@ fi
 if [ ${phase} -le 1 ]; then
   #####
   # fine-tune for TAG
-  exp_name="finetune_TAG"
-  CUDA_VISIBLE_DEVICES=${gpu_id} python fine_tune_single_task.py -verbose 0 \
+  exp_name="fine-tune_TAG"
+  CUDA_VISIBLE_DEVICES=${gpu_id} python main.py -verbose 0 \
     -nb_iter_per_epoch 500 \
     -task TAG \
     -name ${exp_name} -model_scp DcaseNet -model_name get_DcaseNet_v3 \
@@ -64,8 +64,8 @@ fi
 if [ ${phase} -le 1 ]; then
   #####
   # fine-tune for SED
-  exp_name="finetune_SED"
-  CUDA_VISIBLE_DEVICES=${gpu_id} python fine_tune_single_task.py -verbose 0 \
+  exp_name="fine-tune_SED"
+  CUDA_VISIBLE_DEVICES=${gpu_id} python main.py -verbose 0 \
     -nb_iter_per_epoch 500 \
     -task TAG \
     -name ${exp_name} -model_scp DcaseNet -model_name get_DcaseNet_v3 \
