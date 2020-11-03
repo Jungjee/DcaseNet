@@ -65,4 +65,3 @@ This repository provides the code for reproducing the below paper.
 # Log
 - 2020.09.24. : Initial commit
 - 2020.10.18. : Overall validation & refactoring (thanks to yeongsoo)
-
