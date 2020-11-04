@@ -18,7 +18,7 @@ We used Nvidia GPU Cloud for conducting our experiments. The training was done u
 3. Set parameters in [train.sh](https://github.com/Jungjee/DcaseNet/blob/master/train.sh)
 4. run train.sh
 
-If you prefer to use pre-trained joint DcaseNet and fine-tune only, remove 'Joint' experiment and copy [weights](https://github.com/Jungjee/DcaseNet/tree/master/weights) into your 'dir_model_weight'
+If you prefer to use pre-trained joint DcaseNet and fine-tune only, remove 'Joint' experiment on train.sh and copy [Joint weights](https://github.com/Jungjee/DcaseNet/tree/master/weights/Joint) into your 'save_dir'
 
 ##  Evaluation
 
