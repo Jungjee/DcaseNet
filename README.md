@@ -60,8 +60,8 @@ This repository provides the code for reproducing the below paper.
 ```
 
 # TO-DO
-1. add filetrees
 
 # Log
 - 2020.09.24. : Initial commit
 - 2020.10.18. : Overall validation & refactoring (thanks to yeongsoo)
+- 2020.11.04. : Added filetrees & Refactoring finish
