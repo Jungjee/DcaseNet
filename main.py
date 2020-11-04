@@ -164,8 +164,20 @@ def main():
     with open(save_dir+'modelsumm.txt', 'w') as f: f.write(str(model_summ))
 
     #load weights
-    if 'fine-tune' in args.name or 'Eval' in args.name:
-        model.load_state_dict(torch.load(args.dir_model_weight))
+    if 'fine-tune' in args.name:
+        pre_trained_model = (
+            'Joint/weights/best_ASC.pt'     if 'ASC' in args.task else
+            'Joint/weights/best_lwlrap.pt'  if 'TAG' in args.task else
+            'Joint/weights/best_SED.pt'     if 'SED' in args.task else None
+        )
+        model.load_state_dict(torch.load(args.save_dir+pre_trained_model))
+    elif 'Eval' in args.name:
+        pre_trained_model = (
+            'fine-tuneASC/weights/best_ASC.pt'      if 'ASC' in args.task else
+            'fine-tuneTAG/weights/best_lwlrap.pt'   if 'TAG' in args.task else
+            'fine-tuneSED/weights/best_SED.pt'      if 'SED' in args.task else None
+        )
+        model.load_state_dict(torch.load(args.save_dir+pre_trained_model))
     model = model.to(device)
     
     if 'Eval' in args.name:
