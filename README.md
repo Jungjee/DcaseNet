@@ -51,11 +51,13 @@ Note that when setting dataset directories, the code in this repo expects the fo
 
 This repository provides the code for reproducing the below paper. 
 ```
-@article{jung2020dcasenet,
-  title={DCASENET: An integrated pre-trained deep neural network for detecting and classifying acoustic scenes and events},
+@inproceedings{jung2021dcasenet,
+  title={DCASENet: An integrated pretrained deep neural network for detecting and classifying acoustic scenes and events},
   author={Jung, Jee-weon and Shim, Hye-jin and Kim, Ju-ho and Yu, Ha-Jin},
-  journal={arXiv preprint arXiv:2009.09642},
-  year={2020}
+  booktitle={Proc. ICASSP},
+  pages={621--625},
+  year={2021},
+  organization={IEEE}
 }
 ```
 
